@@ -55,7 +55,7 @@ instance Applicative List where
   pure a = Cons a Nil
   (<*>) Nil _ = Nil
   (<*>) _ Nil = Nil
-  (<*>) (Cons aTob laTob) (Cons a la) = Cons (aTob a) (pure aTob <*> la)
+  (<*>) (Cons f fs) as = fmap f as `append` (fs <*> as)
 
 instance Arbitrary a => Arbitrary (List a) where
   arbitrary = do
@@ -89,6 +89,11 @@ instance Eq a => EqProp (ZipList' a) where
 instance Functor ZipList' where
   fmap f (ZipList' xs) =
     ZipList' $ fmap f xs
+
+{-
+repeat' :: a -> List a
+repeat' a = Cons a (repeat' a)
+-}
 
 instance Applicative ZipList' where
   pure a = ZipList' $ repeat a
